@@ -11,7 +11,6 @@ function App() {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Navbar />
 
-      {/* Main content */}
       <div className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -20,7 +19,6 @@ function App() {
         </Routes>
       </div>
 
-      {/* Global Footer */}
       <Footer />
     </div>
   );

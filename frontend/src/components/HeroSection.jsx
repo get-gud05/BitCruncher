@@ -1,15 +1,14 @@
 import React from "react";
-import SoundWave from "./SoundWave"; // optional animated background
+import SoundWave from "./SoundWave"; 
+
+const scrollToButtons = () => {
+  const section = document.getElementById("get-started");
+  section?.scrollIntoView({ behavior: "smooth" });
+};
 
 const HeroSection = () => {
-  const scrollToEncoder = () => {
-    const element = document.getElementById("encoder");
-    if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
     <section className="min-h-screen flex items-center justify-center text-center relative overflow-hidden pt-20">
-      {/* Background gradients */}
       <div
         className="absolute inset-0"
         style={{
@@ -18,7 +17,6 @@ const HeroSection = () => {
         }}
       />
       
-      {/* Optional animated background */}
       <SoundWave />
 
       <div className="container mx-auto px-6 z-10">
@@ -32,8 +30,8 @@ const HeroSection = () => {
           Encode your strings securely and efficiently using Huffman Coding. Experience a modern, interactive, and sleek interface built with React and Tailwind CSS.
         </p>
         <button
-          onClick={scrollToEncoder}
-          className="mt-10 inline-block bg-gradient-to-r from-gray-700 to-gray-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-transform"
+        onClick={scrollToButtons}
+        className="mt-10 inline-block bg-gradient-to-r from-gray-700 to-gray-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-transform"
         >
           Try It Now
         </button>

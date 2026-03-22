@@ -4,7 +4,6 @@ using namespace std;
 #define MAX_TREE_HT 100
 #define MAX_CHAR 256
 
-// Node structure
 class Node {
 public:
     char data;
@@ -19,29 +18,24 @@ public:
     }
 };
 
-// Comparator for priority queue
 struct Compare {
     bool operator()(Node* a, Node* b) {
         return a->freq > b->freq;
     }
 };
 
-// Build Huffman Tree
 Node* buildHuffmanTree(const string &input) {
     unordered_map<char, int> freq;
 
-    // Count frequency
     for (char c : input)
         freq[c]++;
 
     priority_queue<Node*, vector<Node*>, Compare> pq;
 
-    // Create nodes
     for (auto &p : freq) {
         pq.push(new Node(p.first, p.second));
     }
 
-    // Edge case: only one unique char
     if (pq.size() == 1) {
         Node* only = pq.top();
         pq.pop();
@@ -50,7 +44,6 @@ Node* buildHuffmanTree(const string &input) {
         pq.push(root);
     }
 
-    // Build tree
     while (pq.size() > 1) {
         Node* left = pq.top(); pq.pop();
         Node* right = pq.top(); pq.pop();
@@ -65,11 +58,9 @@ Node* buildHuffmanTree(const string &input) {
     return pq.top();
 }
 
-// Store codes
 void storeCodes(Node* root, string code, vector<string> &codes) {
     if (!root) return;
 
-    // Leaf node
     if (!root->left && !root->right) {
         codes[(unsigned char)root->data] = code;
     }
@@ -86,14 +77,11 @@ int main(int argc, char* argv[]) {
 
     string input = argv[1];
 
-    // Build tree
     Node* root = buildHuffmanTree(input);
 
-    // Store codes
     vector<string> codes(MAX_CHAR);
     storeCodes(root, "", codes);
 
-    // Encode string
     string encoded = "";
     for (char c : input) {
         encoded += codes[(unsigned char)c];
@@ -101,7 +89,6 @@ int main(int argc, char* argv[]) {
 
     cout << encoded;
 
-    // Calculate sizes
     int originalBits = input.size() * 8;
     int encodedBits = encoded.size();
 

@@ -10,12 +10,10 @@ body {
   background-color: #121212;
 }
 
-/* Glassmorphic card */
 .card-glass {
   @apply bg-gray-800/60 border border-gray-700 backdrop-blur-md rounded-xl p-6 shadow-lg;
 }
 
-/* Floating animation for icons */
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
@@ -25,7 +23,10 @@ body {
   50% { transform: translateY(-5px); }
 }
 
-/* Optional text glow for headings */
 .text-glow {
   text-shadow: 0 0 6px rgba(255,255,255,0.1);
+}
+
+html {
+  scroll-behavior: smooth;
 }
