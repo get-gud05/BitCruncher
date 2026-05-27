@@ -9,9 +9,11 @@ const app = express();
 
 app.use(cors({
   exposedHeaders: [
+    "Content-Disposition",
     "X-Original-Size",
     "X-Compressed-Size",
-    "X-Compression-Percent"
+    "X-Compression-Percent",
+    "X-Restored-Size"
   ]
 }));
 app.use(express.json());

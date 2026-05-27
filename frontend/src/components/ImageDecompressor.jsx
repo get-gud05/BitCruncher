@@ -80,8 +80,26 @@ export default function ImageDecompressor() {
 
       a.href = url;
 
-      a.download =
-        "restored_image";
+      const disposition =
+        response.headers.get(
+            "Content-Disposition"
+        );
+
+        let filename = "restored_file";
+
+        if (disposition) {
+
+        const match =
+            disposition.match(
+            /filename="(.+)"/
+            );
+
+        if (match) {
+            filename = match[1];
+        }
+        }
+
+        a.download = filename;
 
       document.body.appendChild(a);
 

@@ -12,6 +12,7 @@ public:
     Node* right;
 
     Node(unsigned char d, int f) {
+
         data = d;
         freq = f;
 
@@ -20,14 +21,24 @@ public:
 };
 
 struct Compare {
-    bool operator()(Node* a, Node* b) {
+
+    bool operator()(
+        Node* a,
+        Node* b
+    ) {
+
+        if (a->freq == b->freq) {
+            return a->data > b->data;
+        }
+
         return a->freq > b->freq;
     }
 };
 
 Node* buildHuffmanTree(
-    unordered_map<unsigned char, int>& freq
+    map<unsigned char, int>& freq
 ) {
+
     priority_queue<
         Node*,
         vector<Node*>,
@@ -35,8 +46,12 @@ Node* buildHuffmanTree(
     > pq;
 
     for (auto& p : freq) {
+
         pq.push(
-            new Node(p.first, p.second)
+            new Node(
+                p.first,
+                p.second
+            )
         );
     }
 
@@ -49,10 +64,11 @@ Node* buildHuffmanTree(
         Node* only = pq.top();
         pq.pop();
 
-        Node* root = new Node(
-            '$',
-            only->freq
-        );
+        Node* root =
+            new Node(
+                '$',
+                only->freq
+            );
 
         root->left = only;
 
@@ -67,10 +83,11 @@ Node* buildHuffmanTree(
         Node* right = pq.top();
         pq.pop();
 
-        Node* parent = new Node(
-            '$',
-            left->freq + right->freq
-        );
+        Node* parent =
+            new Node(
+                '$',
+                left->freq + right->freq
+            );
 
         parent->left = left;
         parent->right = right;
@@ -85,13 +102,22 @@ string unpackBits(
     const vector<unsigned char>& bytes,
     int totalBits
 ) {
+
     string bits = "";
 
     for (unsigned char byte : bytes) {
 
-        for (int i = 7; i >= 0; i--) {
+        for (
+            int i = 7;
+            i >= 0;
+            i--
+        ) {
 
-            if ((int)bits.size() >= totalBits) {
+            if (
+                (int)bits.size() >=
+                totalBits
+            ) {
+
                 return bits;
             }
 
@@ -110,6 +136,7 @@ vector<unsigned char> huffmanDecode(
     Node* root,
     const string& bits
 ) {
+
     vector<unsigned char> decoded;
 
     Node* current = root;
@@ -117,15 +144,21 @@ vector<unsigned char> huffmanDecode(
     for (char bit : bits) {
 
         if (bit == '0') {
-            current = current->left;
+
+            current =
+                current->left;
+
         } else {
-            current = current->right;
+
+            current =
+                current->right;
         }
 
         if (
             !current->left &&
             !current->right
         ) {
+
             decoded.push_back(
                 current->data
             );
@@ -140,6 +173,7 @@ vector<unsigned char> huffmanDecode(
 vector<unsigned char> runLengthDecode(
     const vector<unsigned char>& data
 ) {
+
     vector<unsigned char> decoded;
 
     for (
@@ -148,7 +182,8 @@ vector<unsigned char> runLengthDecode(
         i += 2
     ) {
 
-        unsigned char value = data[i];
+        unsigned char value =
+            data[i];
 
         unsigned char count =
             data[i + 1];
@@ -158,23 +193,31 @@ vector<unsigned char> runLengthDecode(
             j < count;
             j++
         ) {
-            decoded.push_back(value);
+
+            decoded.push_back(
+                value
+            );
         }
     }
 
     return decoded;
 }
 
-int main(int argc, char* argv[]) {
+int main(
+    int argc,
+    char* argv[]
+) {
 
     if (argc < 2) {
 
-        cerr << "Error: No input file\n";
+        cerr
+            << "Error: No input file\n";
 
         return 1;
     }
 
-    string inputPath = argv[1];
+    string inputPath =
+        argv[1];
 
     ifstream inputFile(
         inputPath,
@@ -183,7 +226,8 @@ int main(int argc, char* argv[]) {
 
     if (!inputFile) {
 
-        cerr << "Error: Cannot open file\n";
+        cerr
+            << "Error: Cannot open file\n";
 
         return 1;
     }
@@ -193,48 +237,64 @@ int main(int argc, char* argv[]) {
     unsigned char extSize;
 
     inputFile.read(
-        reinterpret_cast<char*>(&extSize),
+        reinterpret_cast<char*>(
+            &extSize
+        ),
         sizeof(extSize)
     );
 
     // READ EXTENSION
 
-    string extension(extSize, ' ');
+    string extension(
+        extSize,
+        ' '
+    );
 
     inputFile.read(
         &extension[0],
         extSize
     );
 
-    // READ FREQUENCY TABLE SIZE
+    // READ FREQ TABLE SIZE
 
     int freqSize;
 
     inputFile.read(
-        reinterpret_cast<char*>(&freqSize),
+        reinterpret_cast<char*>(
+            &freqSize
+        ),
         sizeof(freqSize)
     );
 
-    // READ FREQUENCY TABLE
+    // READ FREQ TABLE
 
-    unordered_map<unsigned char, int> freq;
+    map<unsigned char, int> freq;
 
-    for (int i = 0; i < freqSize; i++) {
+    for (
+        int i = 0;
+        i < freqSize;
+        i++
+    ) {
 
         unsigned char byte;
         int frequency;
 
         inputFile.read(
-            reinterpret_cast<char*>(&byte),
+            reinterpret_cast<char*>(
+                &byte
+            ),
             sizeof(unsigned char)
         );
 
         inputFile.read(
-            reinterpret_cast<char*>(&frequency),
+            reinterpret_cast<char*>(
+                &frequency
+            ),
             sizeof(int)
         );
 
-        freq[byte] = frequency;
+        freq[byte] =
+            frequency;
     }
 
     // READ TOTAL BIT COUNT
@@ -242,20 +302,24 @@ int main(int argc, char* argv[]) {
     int totalBits;
 
     inputFile.read(
-        reinterpret_cast<char*>(&totalBits),
+        reinterpret_cast<char*>(
+            &totalBits
+        ),
         sizeof(totalBits)
     );
 
     // READ COMPRESSED DATA
 
     vector<unsigned char> packedBytes(
-        (istreambuf_iterator<char>(inputFile)),
+        (istreambuf_iterator<char>(
+            inputFile
+        )),
         istreambuf_iterator<char>()
     );
 
     inputFile.close();
 
-    // REBUILD HUFFMAN TREE
+    // REBUILD TREE
 
     Node* root =
         buildHuffmanTree(freq);
@@ -279,12 +343,15 @@ int main(int argc, char* argv[]) {
     // RLE DECODE
 
     vector<unsigned char> originalData =
-        runLengthDecode(rleData);
+        runLengthDecode(
+            rleData
+        );
 
     // OUTPUT FILE
 
     string outputPath =
-        "restored" + extension;
+        "restored" +
+        extension;
 
     ofstream outFile(
         outputPath,
@@ -292,7 +359,9 @@ int main(int argc, char* argv[]) {
     );
 
     outFile.write(
-        reinterpret_cast<const char*>(
+        reinterpret_cast<
+            const char*
+        >(
             originalData.data()
         ),
         originalData.size()
@@ -300,13 +369,17 @@ int main(int argc, char* argv[]) {
 
     outFile.close();
 
-    cout << outputPath << "\n";
+    cout
+        << outputPath
+        << "\n";
 
-    cout << "__STATS__\n";
+    cout
+        << "__STATS__\n";
 
-    cout << "RestoredBytes:"
-         << originalData.size()
-         << "\n";
+    cout
+        << "RestoredBytes:"
+        << originalData.size()
+        << "\n";
 
     return 0;
 }

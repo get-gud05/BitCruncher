@@ -7,26 +7,34 @@ class Node {
 public:
     unsigned char data;
     int freq;
+
     Node* left;
     Node* right;
 
     Node(unsigned char d, int f) {
         data = d;
         freq = f;
+
         left = right = nullptr;
     }
 };
 
 struct Compare {
     bool operator()(Node* a, Node* b) {
+
+        if (a->freq == b->freq) {
+            return a->data > b->data;
+        }
+
         return a->freq > b->freq;
     }
 };
 
 Node* buildHuffmanTree(
     const vector<unsigned char>& input,
-    unordered_map<unsigned char, int>& freq
+    map<unsigned char, int>& freq
 ) {
+
     for (unsigned char c : input) {
         freq[c]++;
     }
@@ -38,8 +46,12 @@ Node* buildHuffmanTree(
     > pq;
 
     for (auto& p : freq) {
+
         pq.push(
-            new Node(p.first, p.second)
+            new Node(
+                p.first,
+                p.second
+            )
         );
     }
 
@@ -48,13 +60,15 @@ Node* buildHuffmanTree(
     }
 
     if (pq.size() == 1) {
+
         Node* only = pq.top();
         pq.pop();
 
-        Node* root = new Node(
-            '$',
-            only->freq
-        );
+        Node* root =
+            new Node(
+                '$',
+                only->freq
+            );
 
         root->left = only;
 
@@ -69,10 +83,11 @@ Node* buildHuffmanTree(
         Node* right = pq.top();
         pq.pop();
 
-        Node* parent = new Node(
-            '$',
-            left->freq + right->freq
-        );
+        Node* parent =
+            new Node(
+                '$',
+                left->freq + right->freq
+            );
 
         parent->left = left;
         parent->right = right;
@@ -88,12 +103,18 @@ void storeCodes(
     string code,
     vector<string>& codes
 ) {
+
     if (!root) {
         return;
     }
 
-    if (!root->left && !root->right) {
-        codes[root->data] = code;
+    if (
+        !root->left &&
+        !root->right
+    ) {
+
+        codes[root->data] =
+            code;
     }
 
     storeCodes(
@@ -112,13 +133,16 @@ void storeCodes(
 vector<unsigned char> runLengthEncode(
     const vector<unsigned char>& data
 ) {
+
     vector<unsigned char> encoded;
 
     size_t i = 0;
 
     while (i < data.size()) {
 
-        unsigned char value = data[i];
+        unsigned char value =
+            data[i];
+
         unsigned int count = 1;
 
         while (
@@ -132,7 +156,9 @@ vector<unsigned char> runLengthEncode(
         encoded.push_back(value);
 
         encoded.push_back(
-            static_cast<unsigned char>(count)
+            static_cast<unsigned char>(
+                count
+            )
         );
 
         i += count;
@@ -144,19 +170,28 @@ vector<unsigned char> runLengthEncode(
 vector<unsigned char> packBits(
     const string& bits
 ) {
+
     vector<unsigned char> bytes;
 
-    for (size_t i = 0; i < bits.size(); i += 8) {
+    for (
+        size_t i = 0;
+        i < bits.size();
+        i += 8
+    ) {
 
         unsigned char byte = 0;
 
         for (
             int j = 0;
-            j < 8 && i + j < bits.size();
+            j < 8 &&
+            i + j < bits.size();
             j++
         ) {
+
             if (bits[i + j] == '1') {
-                byte |= (1 << (7 - j));
+
+                byte |=
+                    (1 << (7 - j));
             }
         }
 
@@ -166,14 +201,21 @@ vector<unsigned char> packBits(
     return bytes;
 }
 
-int main(int argc, char* argv[]) {
+int main(
+    int argc,
+    char* argv[]
+) {
 
     if (argc < 2) {
-        cerr << "Error: No input file\n";
+
+        cerr
+            << "Error: No input file\n";
+
         return 1;
     }
 
-    string inputPath = argv[1];
+    string inputPath =
+        argv[1];
 
     ifstream inputFile(
         inputPath,
@@ -181,12 +223,17 @@ int main(int argc, char* argv[]) {
     );
 
     if (!inputFile) {
-        cerr << "Error: Cannot open file\n";
+
+        cerr
+            << "Error: Cannot open file\n";
+
         return 1;
     }
 
     vector<unsigned char> rawData(
-        (istreambuf_iterator<char>(inputFile)),
+        (istreambuf_iterator<char>(
+            inputFile
+        )),
         istreambuf_iterator<char>()
     );
 
@@ -202,21 +249,25 @@ int main(int argc, char* argv[]) {
 
     // HUFFMAN
 
-    unordered_map<unsigned char, int> freq;
+    map<unsigned char, int> freq;
 
-    Node* root = buildHuffmanTree(
-        rleData,
-        freq
-    );
+    Node* root =
+        buildHuffmanTree(
+            rleData,
+            freq
+        );
 
     if (!root) {
 
-        cerr << "Error: Empty file\n";
+        cerr
+            << "Error: Empty file\n";
 
         return 1;
     }
 
-    vector<string> codes(MAX_CHAR);
+    vector<string> codes(
+        MAX_CHAR
+    );
 
     storeCodes(
         root,
@@ -226,9 +277,13 @@ int main(int argc, char* argv[]) {
 
     string encodedBits = "";
 
-    for (unsigned char byte : rleData) {
+    for (
+        unsigned char byte
+        : rleData
+    ) {
 
-        encodedBits += codes[byte];
+        encodedBits +=
+            codes[byte];
     }
 
     // PACK BITS
@@ -246,55 +301,67 @@ int main(int argc, char* argv[]) {
         ios::binary
     );
 
-    // STORE ORIGINAL EXTENSION SIZE
+    // STORE EXTENSION
 
     string extension = "";
 
     size_t dotPos =
         inputPath.find_last_of('.');
 
-    if (dotPos != string::npos) {
+    if (
+        dotPos != string::npos
+    ) {
+
         extension =
-            inputPath.substr(dotPos);
+            inputPath.substr(
+                dotPos
+            );
     }
 
     unsigned char extSize =
         extension.size();
 
     outFile.write(
-        reinterpret_cast<char*>(&extSize),
+        reinterpret_cast<char*>(
+            &extSize
+        ),
         sizeof(extSize)
     );
-
-    // STORE EXTENSION
 
     outFile.write(
         extension.c_str(),
         extSize
     );
 
-    // STORE FREQUENCY TABLE SIZE
+    // STORE FREQ TABLE SIZE
 
-    int freqSize = freq.size();
+    int freqSize =
+        freq.size();
 
     outFile.write(
-        reinterpret_cast<char*>(&freqSize),
+        reinterpret_cast<char*>(
+            &freqSize
+        ),
         sizeof(freqSize)
     );
 
-    // STORE FREQUENCY TABLE
+    // STORE FREQ TABLE
 
     for (auto& p : freq) {
 
         outFile.write(
-            reinterpret_cast<const char*>(
+            reinterpret_cast<
+                const char*
+            >(
                 &p.first
             ),
             sizeof(unsigned char)
         );
 
         outFile.write(
-            reinterpret_cast<char*>(
+            reinterpret_cast<
+                char*
+            >(
                 &p.second
             ),
             sizeof(int)
@@ -307,11 +374,13 @@ int main(int argc, char* argv[]) {
         encodedBits.size();
 
     outFile.write(
-        reinterpret_cast<char*>(&totalBits),
+        reinterpret_cast<char*>(
+            &totalBits
+        ),
         sizeof(totalBits)
     );
 
-    // STORE COMPRESSED DATA
+    // STORE DATA
 
     outFile.write(
         reinterpret_cast<char*>(
@@ -329,30 +398,36 @@ int main(int argc, char* argv[]) {
         (
             1.0 -
             (
-                (double)compressedBits /
-                (double)originalBits
+                (double)
+                compressedBits /
+                (double)
+                originalBits
             )
         ) * 100.0;
 
-    // RESPONSE
+    cout
+        << outputPath
+        << "\n";
 
-    cout << outputPath<<"\n";
+    cout
+        << "__STATS__\n";
 
-    cout << "__STATS__\n";
+    cout
+        << "Original:"
+        << originalBits
+        << "\n";
 
-    cout << "Original:"
-         << originalBits
-         << "\n";
+    cout
+        << "Compressed:"
+        << compressedBits
+        << "\n";
 
-    cout << "Compressed:"
-         << compressedBits
-         << "\n";
-
-    cout << "CompressionPercent:"
-         << fixed
-         << setprecision(2)
-         << compressionPercent
-         << "\n";
+    cout
+        << "CompressionPercent:"
+        << fixed
+        << setprecision(2)
+        << compressionPercent
+        << "\n";
 
     return 0;
 }
