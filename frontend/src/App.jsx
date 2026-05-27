@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import TextCompression from "./pages/TextCompression";
 import ImageCompression from "./pages/ImageCompression";
+import ImageDecompression from "./pages/ImageDecompression";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/text" element={<TextCompression />} />
           <Route path="/image" element={<ImageCompression />} />
+          <Route path="/image-decompress" element={<ImageDecompression />} />
         </Routes>
       </div>
 

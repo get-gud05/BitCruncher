@@ -24,6 +24,10 @@ export default function Home() {
             <Link to="/image" className="px-6 py-3 bg-purple-500 rounded-lg">
             Image Compression
             </Link>
+
+            <Link to="/image-decompress" className="px-6 py-3 bg-green-500 rounded-lg">
+            Image Decompression
+            </Link>
         </div>
         </div>
     </>
