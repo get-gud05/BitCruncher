@@ -156,6 +156,10 @@ export default function ImageDecompressor() {
           Huffman compressed file
         </p>
 
+        <p className="mt-2 text-sm text-red-400">
+          Only upload a .huff file created by this application. Large BMP-based compressed files may exceed Render&apos;s limits, so use smaller files for the best chance of successful decompression.
+        </p>
+
       </div>
 
       {/* FILE INPUT */}

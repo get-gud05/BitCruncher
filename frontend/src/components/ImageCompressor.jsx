@@ -152,6 +152,11 @@ export default function CompressionTab() {
         <p className="text-gray-400 mt-1">
           Compress image using RLE + Huffman Encoding
         </p>
+
+        <p className="mt-2 text-sm text-red-400">
+          This compressor was designed mainly for .bmp files. BMP images are often very large and can exceed Render&apos;s limits, causing compression to fail. You can try JPG or PNG files, but they may become larger because those formats already use more advanced compression techniques.
+        </p>
+        
       </div>
 
       {/* FILE INPUT */}
