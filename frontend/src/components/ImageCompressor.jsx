@@ -59,7 +59,7 @@ export default function CompressionTab() {
       formData.append("image", imageFile);
 
       const response = await fetch(
-        "http://localhost:5000/compress",
+        "https://bitcruncher.onrender.com/compress",
         {
           method: "POST",
           body: formData,

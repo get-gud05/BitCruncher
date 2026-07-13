@@ -17,7 +17,7 @@ export default function HuffmanEncoder() {
     setEncodedSize(0);
 
     try {
-      const response = await fetch("http://localhost:5000/encode", {
+      const response = await fetch("https://bitcruncher.onrender.com/encode", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input }),

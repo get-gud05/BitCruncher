@@ -55,7 +55,7 @@ export default function ImageDecompressor() {
 
       const response =
         await fetch(
-          "http://localhost:5000/decompress",
+          "https://bitcruncher.onrender.com/decompress",
           {
             method: "POST",
             body: formData,
